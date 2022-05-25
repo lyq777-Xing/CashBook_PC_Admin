@@ -1,10 +1,10 @@
 <template>
-  <el-card>
+   <el-card>
     <el-row>
       <el-input style="width:200px;float:left;margin-button:15px;" placeholder="请输入内容" v-model="queryInfo.query" class="input-with-select">
         <el-button slot="append" icon="el-icon-search" @click="find"></el-button>
       </el-input>
-      <v-btn style="float:left;margin-left:15px;background-color: blue;color:#fff" @click="showAddDialog">添加管理员</v-btn>
+      <v-btn style="float:left;margin-left:15px;background-color: blue;color:#fff" @click="showAddDialog">添加用户</v-btn>
     </el-row>
     <el-table
       :data="tableData"
@@ -15,28 +15,28 @@
         type="index">
       </el-table-column>
       <el-table-column
-        prop="mgName"
-        label="管理员名称">
+        prop="userName"
+        label="用户名称">
       </el-table-column>
       <el-table-column
-        prop="mgDate"
+        prop="userCreatedate"
         label="创建时间">
       </el-table-column>
       <el-table-column
-        prop="mgEmail"
+        prop="userEmail"
         label="邮箱">
       </el-table-column>
       <el-table-column
-        prop="mgHeader"
+        prop="userHeader"
         label="用户头像地址">
       </el-table-column>
       <el-table-column
-        prop="mgPhone"
+        prop="userPhone"
         label="电话号码">
       </el-table-column>
       <el-table-column
         prop="roleName"
-        label="管理员角色">
+        label="用户角色">
       </el-table-column>
       <el-table-column label="操作" width="400px">
         <template slot-scope="scope">
@@ -57,33 +57,33 @@
       :total="total">
     </el-pagination>
 
-<!-- 添加管理员的dialog -->
+<!-- 添加用户的dialog -->
     <el-dialog
-      title="添加管理员"
+      title="添加用户"
       :visible.sync="addDialogVisible"
       width="50%"
       :before-close="handleClose">
       <el-form status-icon :model="addruleForm" :rules="addrules" ref="addruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="管理员名称" prop="mgName">
-          <el-input v-model="addruleForm.mgName"></el-input>
+        <el-form-item label="用户名称" prop="userName">
+          <el-input v-model="addruleForm.userName"></el-input>
         </el-form-item>
-        <el-form-item label="管理员密码" prop="mgPassword">
-          <el-input type="password" v-model="addruleForm.mgPassword" autocomplete="off"></el-input>
+        <el-form-item label="用户密码" prop="userPassword">
+          <el-input type="password" v-model="addruleForm.userPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPassword">
           <el-input type="password" v-model="addruleForm.checkPassword" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="管理员角色" prop="roleId">
-          <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择管理员角色">
-            <el-option label="子管理员" value="2"></el-option>
-            <!-- <el-option label="区域二" value="beijing"></el-option> -->
+        <el-form-item label="用户角色" prop="roleId">
+          <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择用户角色">
+            <el-option label="普通用户" value="3"></el-option>
+            <el-option label="会员用户" value="4"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="管理员邮箱" prop="mgEmail">
-          <el-input v-model="addruleForm.mgEmail"></el-input>
+        <el-form-item label="用户邮箱" prop="userEmail">
+          <el-input v-model="addruleForm.userEmail"></el-input>
         </el-form-item>
-        <el-form-item label="管理员手机号" prop="mgPhone">
-          <el-input v-model="addruleForm.mgPhone"></el-input>
+        <el-form-item label="用户手机号" prop="userPhone">
+          <el-input v-model="addruleForm.userPhone"></el-input>
         </el-form-item>
         <el-form-item label="上传图片">
           <el-upload
@@ -106,15 +106,15 @@
       </span>
     </el-dialog>
 
-<!-- 修改管理员的dialog -->
+<!-- 修改用户的dialog -->
     <el-dialog
-      title="修改管理员信息"
+      title="修改用户信息"
       :visible.sync="updDialogVisible"
       width="50%"
       :before-close="updhandleClose">
       <el-form status-icon :model="updruleForm" :rules="updrules" ref="updruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="管理员名称" prop="mgName">
-          <el-input v-model="updruleForm.mgName"></el-input>
+        <el-form-item label="用户名称" prop="userName">
+          <el-input v-model="updruleForm.userName"></el-input>
         </el-form-item>
         <!-- <el-form-item label="管理员密码" prop="mgPassword">
           <el-input type="password" v-model="updruleForm.mgPassword" autocomplete="off"></el-input>
@@ -127,11 +127,11 @@
             <el-option label="子管理员" value="2"></el-option>
           </el-select>
         </el-form-item> -->
-        <el-form-item label="管理员邮箱" prop="mgEmail">
-          <el-input v-model="updruleForm.mgEmail"></el-input>
+        <el-form-item label="用户邮箱" prop="userEmail">
+          <el-input v-model="updruleForm.userEmail"></el-input>
         </el-form-item>
-        <el-form-item label="管理员手机号" prop="mgPhone">
-          <el-input v-model="updruleForm.mgPhone"></el-input>
+        <el-form-item label="用户手机号" prop="userPhone">
+          <el-input v-model="updruleForm.userPhone"></el-input>
         </el-form-item>
         <el-form-item label="上传图片">
           <el-upload
@@ -172,7 +172,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
-      } else if (value !== this.addruleForm.mgPassword) {
+      } else if (value !== this.addruleForm.userPassword) {
         callback(new Error('两次输入密码不一致!'));
       } else {
         callback();
@@ -186,27 +186,27 @@ export default {
       },
       tableData:[],
         // id:'',
-        // mgDate:'',
-        // mgEmail:'',
-        // mgHeader:'',
-        // mgName:'',
-        // mgPhone:'',
+        // userCreatedate:'',
+        // userEmail:'',
+        // userHeader:'',
+        // userName:'',
+        // userPhone:'',
         // roleId:'',
         // roleName:''
       total:0,
       addDialogVisible:false,
       addruleForm:{
-        mgPassword:'',
-        mgEmail:'',
-        mgHeader:'',
-        mgName:'',
-        mgPhone:'',
+        userPassword:'',
+        userEmail:'',
+        userHeader:'',
+        userName:'',
+        userPhone:'',
         roleId:'',
         roleName:'',
         checkPassword:'',
       },
       addrules:{
-        mgPassword: [
+        userPassword: [
           { validator: validatePass, trigger: 'blur' },
           { required: true, trigger: 'blur' },
         ],
@@ -214,32 +214,32 @@ export default {
           { validator: validatePass2, trigger: 'blur' },
           { required: true, trigger: 'blur' },
         ],
-        mgName: [
-          { required: true, message: '请输入管理员名称', trigger: 'blur' },
+        userName: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
           { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         roleId: [
-          { required: true, message: '选择管理员角色', trigger: 'blur' }
+          { required: true, message: '选择用户角色', trigger: 'blur' }
         ],
       },
       autoUpload:true,//自动上传
       imageUrl:null,//模型数据，用于上传图片完成后图片预览
       updDialogVisible:false,
       updruleForm:{
-        mgPassword:'',
-        mgEmail:'',
-        mgHeader:'',
-        mgName:'',
-        mgPhone:'',
+        userPassword:'',
+        userEmail:'',
+        userHeader:'',
+        userName:'',
+        userPhone:'',
         roleId:'',
       },
       updrules:{
-        mgName: [
-          { required: true, message: '请输入管理员名称', trigger: 'blur' },
+        userName: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
           { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         roleId: [
-          { required: true, message: '选择管理员角色', trigger: 'blur' }
+          { required: true, message: '选择用户角色', trigger: 'blur' }
         ],
       }
     }
@@ -249,14 +249,14 @@ export default {
   },
   methods:{
     async DateList(){
-      const {data:res} = await this.$http.get('/manager/getall',{params:this.queryInfo})
+      const {data:res} = await this.$http.get('/user/getall',{params:this.queryInfo})
       console.log(res);
       if(res.meta.status === 200){
-        this.$message.success('查询管理员成功')
+        this.$message.success('查询用户成功')
         this.total = res.data.total
         this.tableData = res.data.records
       }else{
-        this.$message.error('查询管理员失败')
+        this.$message.error('查询用户失败')
       }
     },
     handleSizeChange(val) {
@@ -281,7 +281,7 @@ export default {
       //   type: response.flag ? 'success' : 'error'
       // });
       //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
-      this.addruleForm.mgHeader = response.data;
+      this.addruleForm.userHeader = response.data;
     },
     //上传文件之前的钩子
     beforeAvatarUpload(file) {
@@ -307,7 +307,7 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
-        const {data:res} = await this.$http.post('/manager/add',this.addruleForm);
+        const {data:res} = await this.$http.post('/user/add',this.addruleForm);
         console.log(res); 
         if(res.meta.status === 200){
           this.DateList();
@@ -325,7 +325,7 @@ export default {
       
     },
     async del(row){
-      const confirmResult = await this.$confirm('此操作将永久删除该管理员, 是否继续?', '提示', {
+      const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -333,7 +333,7 @@ export default {
       if(confirmResult !== 'confirm'){
           return this.$message.info('已取消删除')
       }
-      const {data:res} = await this.$http.delete("manager/del?id=" + row.id)
+      const {data:res} = await this.$http.delete("user/del?id=" + row.id)
       if(res.meta.status === 200){
         this.$message.success('删除成功')
         this.DateList()
@@ -347,13 +347,13 @@ export default {
       this.$refs.updruleForm.resetFields();
     },
     async showUpdDialog(row){
-      const {data:res} = await this.$http.get('manager/getById?id='+row.id)
+      const {data:res} = await this.$http.get('user/getById?id='+row.id)
       if(res.meta.status === 200){
         this.updDialogVisible = true
         this.updruleForm = res.data
-        this.imageUrl = "https://cashbook-1310707740.cos.ap-shanghai.myqcloud.com/"+res.data.mgHeader
+        this.imageUrl = "https://cashbook-1310707740.cos.ap-shanghai.myqcloud.com/"+res.data.userHeader
       }else{
-        return this.$message.error('查询该管理员失败')
+        return this.$message.error('查询该用户失败')
       }
     },
     updresetForm(){
@@ -362,7 +362,7 @@ export default {
     async upd(){
       this.$refs.updruleForm.validate(async valid=>{
         if(!valid) return
-        const {data:res} = await this.$http.post('/manager/upd',this.updruleForm);
+        const {data:res} = await this.$http.put('/user/upd',this.updruleForm);
         console.log(res); 
         if(res.meta.status === 200){
           this.DateList();

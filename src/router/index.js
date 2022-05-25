@@ -7,6 +7,7 @@ import Admin from '../components/Admin.vue'
 import store from '@/store/index'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import User from '../components/User.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,7 @@ const routes = [{
         children: [
             { path: '/welcome', component: Welcome, meta: { keepAlive: true, comp: Welcome, name: 'welcome' } },
             { path: '/admin', component: Admin, meta: { keepAlive: true, comp: Admin, name: 'admin' } },
+            { path: '/user', component: User, meta: { keepAlive: true, comp: User, name: 'user' } },
         ]
     },
     {
