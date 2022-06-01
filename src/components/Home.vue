@@ -3,7 +3,7 @@
     <el-header>
       <el-row :gutter="0">
         <el-col :span="4">
-          <img class="logo_header" src="../assets/蓝鲸记账11.png" alt="">
+          <img class="logo_header" src="../assets/11.png" alt="">
         </el-col>
         <el-col class="right_header" :span="3">
           <el-dropdown class="dropdown" @command="handleCommand">

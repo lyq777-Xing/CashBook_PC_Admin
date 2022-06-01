@@ -77,8 +77,11 @@
           <el-input type="password" v-model="addruleForm.checkPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="管理员角色" prop="roleId">
-          <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择管理员角色">
-            <el-option label="子管理员" value="2"></el-option>
+          <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择管理员角色" >
+            <!-- <el-option label="子管理员" value="2"></el-option> -->
+            <template >
+              <el-option v-for="item in roleData" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+            </template>
             <!-- <el-option label="区域二" value="beijing"></el-option> -->
           </el-select>
         </el-form-item>
@@ -244,11 +247,13 @@ export default {
         roleId: [
           { required: true, message: '选择管理员角色', trigger: 'blur' }
         ],
-      }
+      },
+      roleData:[]
     }
   },
   created(){
     this.DateList()
+    this.getRole()
   },
   methods:{
     async DateList(){
@@ -263,6 +268,19 @@ export default {
       }
       else{
         this.$message.error('查询管理员失败')
+      }
+    },
+    async getRole(){
+      const {data:res} = await this.$http.get('/role/getalladmin')
+      console.log(res);
+      if(res.meta.status === 200){
+        this.$message.success('ok!')
+        this.roleData = res.data
+      }else if(res.meta.status === 407){
+        this.$message.error('当前登录人数过多 请刷新重试')
+      }
+      else{
+        this.$message.error('error!')
       }
     },
     handleSizeChange(val) {
@@ -314,6 +332,9 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
+        if(this.addruleForm.mgHeader ==="" || this.addruleForm.mgHeader == null){
+          this.addruleForm.mgHeader = "efcc1544-cb75-416e-9477-ffc4900fd017.jpg";
+        }
         console.log(this.addruleForm);
         const {data:res} = await this.$http.post('/manager/add',this.addruleForm);
         console.log(res); 

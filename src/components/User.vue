@@ -312,6 +312,9 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
+        if(this.addruleForm.userHeader ==="" || this.addruleForm.userHeader == null){
+          this.addruleForm.userHeader = "efcc1544-cb75-416e-9477-ffc4900fd017.jpg";
+        }
         const {data:res} = await this.$http.post('/user/add',this.addruleForm);
         console.log(res); 
         if(res.meta.status === 200){

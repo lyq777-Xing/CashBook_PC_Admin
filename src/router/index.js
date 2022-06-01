@@ -9,6 +9,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import User from '../components/User.vue'
 import Permission from '../components/Permission.vue'
+import Role from '../components/Role.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,7 @@ const routes = [{
             { path: '/admin', component: Admin, meta: { keepAlive: true, comp: Admin, name: 'admin' } },
             { path: '/user', component: User, meta: { keepAlive: true, comp: User, name: 'user' } },
             { path: '/permission', component: Permission, meta: { keepAlive: true, comp: Permission, name: 'permission' } },
+            { path: '/role', component: Role, meta: { keepAlive: true, comp: Role, name: 'role' } },
         ]
     },
     {
