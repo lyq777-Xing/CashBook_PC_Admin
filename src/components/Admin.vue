@@ -27,8 +27,11 @@
         label="邮箱">
       </el-table-column>
       <el-table-column
-        prop="mgHeader"
+        width="200px"
         label="用户头像地址">
+        <template slot-scope="scope">
+          <img style="width:100px;height:100px;" :src="'https://cashbook-1310707740.cos.ap-shanghai.myqcloud.com/'+scope.row.mgHeader" alt="">
+        </template>
       </el-table-column>
       <el-table-column
         prop="mgPhone"
@@ -216,7 +219,7 @@ export default {
         ],
         mgName: [
           { required: true, message: '请输入管理员名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
         ],
         roleId: [
           { required: true, message: '选择管理员角色', trigger: 'blur' }
@@ -236,7 +239,7 @@ export default {
       updrules:{
         mgName: [
           { required: true, message: '请输入管理员名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
         ],
         roleId: [
           { required: true, message: '选择管理员角色', trigger: 'blur' }
@@ -255,7 +258,10 @@ export default {
         this.$message.success('查询管理员成功')
         this.total = res.data.total
         this.tableData = res.data.records
-      }else{
+      }else if(res.meta.status === 407){
+        this.$message.error('当前登录人数过多 请刷新重试')
+      }
+      else{
         this.$message.error('查询管理员失败')
       }
     },
@@ -282,6 +288,7 @@ export default {
       // });
       //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
       this.addruleForm.mgHeader = response.data;
+      console.log(this.addruleForm.mgHeader);
     },
     //上传文件之前的钩子
     beforeAvatarUpload(file) {
@@ -307,6 +314,7 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
+        console.log(this.addruleForm);
         const {data:res} = await this.$http.post('/manager/add',this.addruleForm);
         console.log(res); 
         if(res.meta.status === 200){

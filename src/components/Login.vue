@@ -10,9 +10,9 @@
             <el-form-item label="管理员密码" prop="password">
               <el-input v-model="LoginForm.password"></el-input>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
               <el-checkbox name="rememberMe" v-model="LoginForm.rememberMe">记住我</el-checkbox>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
               <v-btn class="loginBtn" @click="login">登录</v-btn>
             </el-form-item>
@@ -51,9 +51,12 @@ export default {
   data(){
     return{
       LoginForm:{
+        client_id:'cl',
+        client_secret:'secret',
+        grant_type:'password',
         username:'admin',
         password:'',
-        rememberMe:false,
+        // rememberMe:false,
       },
       loginRules:{
         username:[{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -97,13 +100,20 @@ export default {
     login(){
       this.$refs.LoginForm.validate(async valid=>{
         if(!valid) return
-        const{data:res}=await this.$http.post('login?'+qs.stringify(this.LoginForm))
-        console.log(this.LoginForm);
+        const{data:res}=await this.$http.post('admin/oauth/token?'+qs.stringify(this.LoginForm))
+        // console.log(this.LoginForm);
         console.log(res);
-        if(res.meta.status === 200){
-          // window.sessionStorage.setItem("token",res.data.token);
+
+        if(res.access_token != null && res.access_token != ""){
+          window.sessionStorage.setItem("token","bearer " + res.access_token);
           this.$router.push("/home")
+        
         }
+
+        // if(res.meta.status === 200){
+          // window.sessionStorage.setItem("token",res.data.token);
+        //   this.$router.push("/home")
+        // }
 
       })
     },

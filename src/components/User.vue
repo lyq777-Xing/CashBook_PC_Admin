@@ -27,8 +27,11 @@
         label="邮箱">
       </el-table-column>
       <el-table-column
-        prop="userHeader"
-        label="用户头像地址">
+        label="用户头像地址"
+        width="100px">
+        <template slot-scope="scope">
+          <img style="width:100px;height:100px;" :src="'https://cashbook-1310707740.cos.ap-shanghai.myqcloud.com/'+scope.row.userHeader" alt="">
+        </template>
       </el-table-column>
       <el-table-column
         prop="userPhone"
@@ -255,6 +258,8 @@ export default {
         this.$message.success('查询用户成功')
         this.total = res.data.total
         this.tableData = res.data.records
+      }else if(res.meta.status === 407){
+        this.$message.error('当前登录人数过多 请刷新重试')
       }else{
         this.$message.error('查询用户失败')
       }

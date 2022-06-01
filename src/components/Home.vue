@@ -8,7 +8,7 @@
         <el-col class="right_header" :span="3">
           <el-dropdown class="dropdown" @command="handleCommand">
             <span class="el-dropdown-link">
-              <img src="../assets/logo_1.png" class="headerImg" alt="">
+              <img :src="managerImg" class="headerImg" alt="">
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a">个人信息</el-dropdown-item>
@@ -86,6 +86,7 @@ export default {
   data(){
     return{
       name: "Home",
+      managerImg:'',
       MenuList:[],
       isCollapse:false, //false为展开 true为收缩
       activepath:'',
@@ -118,6 +119,10 @@ export default {
         508:'el-icon-user',
         509:'el-icon-user',
         510:'el-icon-user',
+        511:'el-icon-message-solid',
+        512:'el-icon-bell',
+        513:'el-icon-s-custom',
+        514:'el-icon-s-custom',
       },
       contextMenuVisible:false,
     }
@@ -184,14 +189,28 @@ export default {
   created(){
     this.getMenu();
     this.activepath=window.sessionStorage.getItem('activepath')
-    
+    this.getManagerDetail()
   },
   methods:{
     logout(){
-
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    },
+    async getManagerDetail(){
+      const {data:res} = await this.$http.get('/manager/getImg');
+      // console.log(res);
+      console.log(JSON.parse(res.data)); 
+      const logo = JSON.parse(res.data)
+      if(res.meta.status === 200){
+        this.managerImg = 'https://cashbook-1310707740.cos.ap-shanghai.myqcloud.com/'+logo.mgHeader;
+      }
     },
     handleCommand(command) {
-      this.$message('click on item ' + command);
+      if(command === 'b'){
+        this.logout()
+      }else{
+        this.$message('click on item ' + command);
+      }
     },
     async getMenu(){
       const {data:res} = await this.$http.get('/menus/menus');
@@ -423,6 +442,26 @@ export default {
       color: #fff;
   }
   /deep/.el-icon-s-tools:before {
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-message-solid {
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-bell {
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-pie-chart {
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-data-analysis{
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-s-custom{
     content: "\e7ac";
     color: #fff;
   }
