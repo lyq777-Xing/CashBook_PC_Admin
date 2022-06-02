@@ -77,9 +77,12 @@
           <el-input type="password" v-model="addruleForm.checkPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="用户角色" prop="roleId">
-          <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择用户角色">
-            <el-option label="普通用户" value="3"></el-option>
-            <el-option label="会员用户" value="4"></el-option>
+         <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择管理员角色" >
+            <!-- <el-option label="子管理员" value="2"></el-option> -->
+            <template >
+              <el-option v-for="item in roleData" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+            </template>
+            <!-- <el-option label="区域二" value="beijing"></el-option> -->
           </el-select>
         </el-form-item>
         <el-form-item label="用户邮箱" prop="userEmail">
@@ -236,6 +239,7 @@ export default {
         userPhone:'',
         roleId:'',
       },
+      roleData:[],
       updrules:{
         userName: [
           { required: true, message: '请输入用户名称', trigger: 'blur' },
@@ -249,6 +253,7 @@ export default {
   },
   created(){
     this.DateList()
+    this.getRole()
   },
   methods:{
     async DateList(){
@@ -262,6 +267,19 @@ export default {
         this.$message.error('当前登录人数过多 请刷新重试')
       }else{
         this.$message.error('查询用户失败')
+      }
+    },
+    async getRole(){
+      const {data:res} = await this.$http.get('/role/getalluser')
+      console.log(res);
+      if(res.meta.status === 200){
+        this.$message.success('ok!')
+        this.roleData = res.data
+      }else if(res.meta.status === 407){
+        this.$message.error('当前登录人数过多 请刷新重试')
+      }
+      else{
+        this.$message.error('error!')
       }
     },
     handleSizeChange(val) {
