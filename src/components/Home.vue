@@ -209,7 +209,7 @@ export default {
       if(command === 'b'){
         this.logout()
       }else{
-        this.$message('click on item ' + command);
+        this.$router.push({path:'/own'})
       }
     },
     async getMenu(){

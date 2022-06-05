@@ -8,7 +8,7 @@
               <el-input id="text" @change="draw" v-model="LoginForm.username"></el-input>
             </el-form-item>
             <el-form-item label="管理员密码" prop="password">
-              <el-input v-model="LoginForm.password"></el-input>
+              <el-input type="password" v-model="LoginForm.password"></el-input>
             </el-form-item>
             <!-- <el-form-item>
               <el-checkbox name="rememberMe" v-model="LoginForm.rememberMe">记住我</el-checkbox>

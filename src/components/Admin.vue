@@ -43,11 +43,19 @@
       </el-table-column>
       <el-table-column label="操作" width="400px">
         <template slot-scope="scope">
+          <v-btn style="margin-right:10px;" v-if="scope.row.id != 500" @click="showRoleDialog(scope.row)">分配角色</v-btn>
+          <v-btn style="margin-right:10px;" @click="del(scope.row)" v-if="scope.row.id != 500">删除</v-btn>
+          <v-btn style="margin-right:10px;" v-if="scope.row.id === 500" disabled @click="showRoleDialog(scope.row)">分配角色</v-btn>
+          <v-btn style="margin-right:10px;" @click="del(scope.row)" v-if="scope.row.id === 500" disabled>删除</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn>
+        </template>
+        <!-- <template slot-scope="scope" v-else>
           <v-btn style="margin-right:10px;">分配角色</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)">删除</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
     <el-pagination
@@ -159,6 +167,30 @@
         <el-button type="primary" @click="upd">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色的dailog -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="RoleDialogVisible"
+      width="30%"
+      :before-close="RoleHandleClose">
+      <el-form status-icon :model="RoleruleForm" ref="RoleruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="管理员名称">
+          <el-input v-model="RoleruleForm.mgName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="管理员角色">
+          <el-select style="float:left" v-model="RoleruleForm.roleId" placeholder="请选择管理员角色">
+            <template >
+              <el-option v-for="item in roleData" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+            </template>
+          </el-select>
+        </el-form-item>
+      </el-form>  
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="RoleHandleClose">取 消</el-button>
+        <el-button type="primary" @click="updRole()">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -248,7 +280,9 @@ export default {
           { required: true, message: '选择管理员角色', trigger: 'blur' }
         ],
       },
-      roleData:[]
+      roleData:[],
+      RoleDialogVisible:false,
+      RoleruleForm:{}
     }
   },
   created(){
@@ -412,6 +446,35 @@ export default {
     },
     find(){
       this.DateList();
+    },
+    async showRoleDialog(row){
+      const {data:res} = await this.$http.get('manager/getById?id='+row.id)
+      if(res.meta.status === 200){
+        this.RoleDialogVisible = true
+        this.RoleruleForm = res.data
+        // this.getRole()
+      }else{
+        return this.$message.error('查询该管理员失败')
+      }
+      this.RoleDialogVisible = true
+    },
+    RoleHandleClose(){
+      this.RoleDialogVisible = false
+      this.$refs.RoleruleForm.resetFields();
+    },
+    async updRole(){
+        const {data:res} = await this.$http.post('/manager/upd',this.RoleruleForm);
+        console.log(res); 
+        if(res.meta.status === 200){
+          this.DateList();
+          this.$refs.RoleruleForm.resetFields();
+          // this.imageUrl=''
+          this.$message.success('更新角色成功')
+          this.RoleDialogVisible = false
+        }
+        else{
+          this.$message.error('更新角色失败')
+        }
     }
   }
 }

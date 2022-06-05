@@ -11,6 +11,26 @@
       stripe
       :fit="true"
       >
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <!-- <pre>{{scope.row}}</pre> -->
+          <el-row  :class="['bdbottom',i1===0 ?'bdtop':'','vcenter']" v-for="(item,i1) in scope.row.children" :key="item.id">
+            <el-col :span="5">
+              <el-tag closable>{{item.permissionName}}</el-tag>
+              <i class="el-icon-caret-right"></i>
+            </el-col> 
+            <el-col :span="19">
+                <!-- <el-row :class="[i2===0 ? '':'bdtop','vcenter']" v-for="(ch,i2) in item.children" :key="ch.id"> -->
+                  <!-- <el-col :span="6"> -->
+                    <!-- @close="removeRightById(scope.row,item2.id)" -->
+                    <el-tag closable  v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag>
+                    <!-- <i class="el-icon-caret-right"></i> -->
+                    <!-- </el-col> -->
+                <!-- </el-row> -->
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
       <el-table-column
         type="index">
       </el-table-column>
@@ -32,7 +52,7 @@
       </el-table-column>
       <el-table-column label="操作" width="400px">
         <template slot-scope="scope">
-          <v-btn style="margin-right:10px;">分配权限</v-btn>
+          <v-btn style="margin-right:10px;" @click="ShowPermissionDialog(scope.row)">分配权限</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)">删除</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
         </template>
@@ -102,6 +122,20 @@
         <el-button @click="updhandleClose">取 消</el-button>
         <el-button @click="updresetForm()">重置</el-button>
         <el-button type="primary" @click="upd">确 定</el-button>
+      </span>
+    </el-dialog>
+
+<!-- 修改角色权限的dailog -->
+    <el-dialog
+      title="分配权限"
+      :visible.sync="setRightDialogVisible"
+      width="50%" @close="setRightClosed">
+      <!-- <el-tree :data="rightlist" :props="treeProps" show-checkbox
+      node-key="id" default-expand-all :default-checked-keys="defkeys" ref="treeRef">
+      </el-tree> -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRightDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allotRights">确 定</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -177,7 +211,14 @@ export default {
           { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
         ],
       },
-      roleData:[]
+      roleData:[],
+      setRightDialogVisible:false,
+      rightlist:[],
+      defkeys:[],
+      treeProps:{
+        label:'authName',
+        children:'children'
+      },
     }
   },
   created(){
@@ -346,11 +387,27 @@ export default {
     },
     find(){
       this.DateList();
+    },
+    async ShowPermissionDialog(row){
+      const {data:res} = await this.$http.get('/role/getpermissionbyroleid?id='+row.id)
+      console.log(res);
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+  .el-tag{
+    margin: 7px;
+  }
+  .bdtop{
+    border-top: 1px solid #eee;
+  }
+  .bdbottom{
+    border-bottom: 1px solid #eee;
+  }
+  .vcenter{
+    display: flex;
+    align-items: center;
+  }
 </style>

@@ -10,6 +10,7 @@ import 'nprogress/nprogress.css'
 import User from '../components/User.vue'
 import Permission from '../components/Permission.vue'
 import Role from '../components/Role.vue'
+import Own from '../components/own.vue'
 
 Vue.use(VueRouter)
 
@@ -20,13 +21,14 @@ const routes = [{
     {
         path: '/home',
         component: Home,
-        // redirect: '/welcome',
+        redirect: '/welcome',
         children: [
             { path: '/welcome', component: Welcome, meta: { keepAlive: true, comp: Welcome, name: 'welcome' } },
             { path: '/admin', component: Admin, meta: { keepAlive: true, comp: Admin, name: 'admin' } },
             { path: '/user', component: User, meta: { keepAlive: true, comp: User, name: 'user' } },
             { path: '/permission', component: Permission, meta: { keepAlive: true, comp: Permission, name: 'permission' } },
             { path: '/role', component: Role, meta: { keepAlive: true, comp: Role, name: 'role' } },
+            { path: '/own', component: Own, meta: { keepAlive: true, comp: Own, name: 'own' } },
         ]
     },
     {

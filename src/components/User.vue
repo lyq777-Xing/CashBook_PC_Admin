@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作" width="400px">
         <template slot-scope="scope">
-          <v-btn style="margin-right:10px;">分配角色</v-btn>
+          <v-btn style="margin-right:10px;" @click="showRoleDialog(scope.row)">分配角色</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)">删除</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn>
@@ -159,6 +159,32 @@
         <el-button type="primary" @click="upd">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色的dailog -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="RoleDialogVisible"
+      width="30%"
+      :before-close="RoleHandleClose">
+      <el-form status-icon :model="RoleruleForm" ref="RoleruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名称">
+          <el-input v-model="RoleruleForm.userName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="用户角色">
+          <el-select style="float:left" v-model="RoleruleForm.roleId" placeholder="请选择管理员角色">
+            <template >
+              <el-option v-for="item in roleData" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+            </template>
+            <!-- <el-option label="区域一" value="shanghai"></el-option> -->
+            <!-- <el-option label="区域二" value="beijing"></el-option> -->
+          </el-select>
+        </el-form-item>
+      </el-form>  
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="RoleHandleClose">取 消</el-button>
+        <el-button type="primary" @click="updRole()">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -248,7 +274,9 @@ export default {
         roleId: [
           { required: true, message: '选择用户角色', trigger: 'blur' }
         ],
-      }
+      },
+      RoleDialogVisible:false,
+      RoleruleForm:{},
     }
   },
   created(){
@@ -409,6 +437,35 @@ export default {
     },
     find(){
       this.DateList();
+    },
+    async showRoleDialog(row){
+      const {data:res} = await this.$http.get('user/getById?id='+row.id)
+      if(res.meta.status === 200){
+        this.RoleDialogVisible = true
+        this.RoleruleForm = res.data
+        // this.getRole()
+      }else{
+        return this.$message.error('查询该用户失败')
+      }
+      this.RoleDialogVisible = true
+    },
+    RoleHandleClose(){
+      this.RoleDialogVisible = false
+      this.$refs.RoleruleForm.resetFields();
+    },
+    async updRole(){
+        const {data:res} = await this.$http.put('/user/upd',this.RoleruleForm);
+        console.log(res); 
+        if(res.meta.status === 200){
+          this.DateList();
+          this.$refs.RoleruleForm.resetFields();
+          // this.imageUrl=''
+          this.$message.success('更新角色成功')
+          this.RoleDialogVisible = false
+        }
+        else{
+          this.$message.error('更新角色失败')
+        }
     }
   }
 }
