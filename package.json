@@ -10,6 +10,7 @@
     "dependencies": {
         "axios": "^0.27.2",
         "core-js": "^3.6.5",
+        "echarts": "^5.3.2",
         "element-ui": "^2.15.8",
         "less": "^3.9.0",
         "less-loader": "^4.1.0",
@@ -32,10 +33,10 @@
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.0",
         "eslint-plugin-vue": "^6.2.2",
-        "vue-template-compiler": "^2.6.11",
         "sass": "~1.32.0",
         "sass-loader": "^10.0.0",
         "vue-cli-plugin-vuetify": "^2.4.8",
+        "vue-template-compiler": "^2.6.11",
         "vuetify-loader": "^1.7.0"
     }
 }

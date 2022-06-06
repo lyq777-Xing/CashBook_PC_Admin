@@ -7,6 +7,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
 import Vuex from 'vuex'
+// import echarts from 'echarts'
+// import './plugins/charts.js'
+
+// Vue.prototype.$echarts = echarts
 
 Vue.use(Vuex)
 

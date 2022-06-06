@@ -11,6 +11,7 @@ import User from '../components/User.vue'
 import Permission from '../components/Permission.vue'
 import Role from '../components/Role.vue'
 import Own from '../components/own.vue'
+import Usermember from '../components/UserMember.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,7 @@ const routes = [{
             { path: '/permission', component: Permission, meta: { keepAlive: true, comp: Permission, name: 'permission' } },
             { path: '/role', component: Role, meta: { keepAlive: true, comp: Role, name: 'role' } },
             { path: '/own', component: Own, meta: { keepAlive: true, comp: Own, name: 'own' } },
+            { path: '/usermember', component: Usermember, meta: { keepAlive: true, comp: Usermember, name: 'usermember' } },
         ]
     },
     {
