@@ -109,7 +109,7 @@ export default {
           this.getManagerDetail();
           this.$refs.updruleForm.resetFields();
           this.imageUrl=''
-          this.$message.success('更新成功 请重新登录查看修改')
+          this.$message.success('更新成功 请重新登录查看修改后的结果')
           this.updDialogVisible = false
         }else if(res.meta.status === 413){
           this.$message.error('该用户名已经被占用')
