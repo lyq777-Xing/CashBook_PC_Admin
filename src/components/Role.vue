@@ -15,15 +15,31 @@
         <template slot-scope="scope">
           <!-- <pre>{{scope.row}}</pre> -->
           <el-row  :class="['bdbottom',i1===0 ?'bdtop':'','vcenter']" v-for="(item,i1) in scope.row.children" :key="item.id">
-            <el-col :span="5">
-              <el-tag closable>{{item.permissionName}}</el-tag>
+            <el-col :span="5" v-if="scope.row.id === 1">
+              <el-tag >{{item.permissionName}}</el-tag>
+              <i class="el-icon-caret-right"></i>
+              <!-- <p>{{scope.row.id}}</p> -->
+            </el-col> 
+            <el-col :span="5" v-else>
+              <el-tag closable @close = "removeRightById(scope.row.id,item.id)">{{item.permissionName}}</el-tag>
               <i class="el-icon-caret-right"></i>
             </el-col> 
-            <el-col :span="19">
+            <el-col :span="19" v-if="scope.row.id === 1">
                 <!-- <el-row :class="[i2===0 ? '':'bdtop','vcenter']" v-for="(ch,i2) in item.children" :key="ch.id"> -->
                   <!-- <el-col :span="6"> -->
                     <!-- @close="removeRightById(scope.row,item2.id)" -->
-                    <el-tag closable  v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag>
+                    <el-tag v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag>
+                    <!-- <el-tag closable  v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag> -->
+                    <!-- <i class="el-icon-caret-right"></i> -->
+                    <!-- </el-col> -->
+                <!-- </el-row> -->
+            </el-col>
+            <el-col :span="19" v-else>
+                <!-- <el-row :class="[i2===0 ? '':'bdtop','vcenter']" v-for="(ch,i2) in item.children" :key="ch.id"> -->
+                  <!-- <el-col :span="6"> -->
+                    <!-- @close="removeRightById(scope.row,item2.id)" -->
+                    <el-tag closable @close = "removeRightById(scope.row.id,ch.id)"  v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag>
+                    <!-- <el-tag closable  v-for="ch in item.children" :key="ch.id" type="success">{{ch.permissionName}}</el-tag> -->
                     <!-- <i class="el-icon-caret-right"></i> -->
                     <!-- </el-col> -->
                 <!-- </el-row> -->
@@ -52,9 +68,12 @@
       </el-table-column>
       <el-table-column label="操作" width="400px">
         <template slot-scope="scope">
-          <v-btn style="margin-right:10px;" @click="ShowPermissionDialog(scope.row)">分配权限</v-btn>
-          <v-btn style="margin-right:10px;" @click="del(scope.row)">删除</v-btn>
-          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
+          <v-btn style="margin-right:10px;" @click="ShowPermissionDialog(scope.row)" v-if="scope.row.id === 1" disabled>分配权限</v-btn>
+          <v-btn style="margin-right:10px;" @click="ShowPermissionDialog(scope.row)" v-else>分配权限</v-btn>
+          <v-btn style="margin-right:10px;" @click="del(scope.row)" v-if="scope.row.id === 1" disabled>删除</v-btn>
+          <v-btn style="margin-right:10px;" @click="del(scope.row)" v-else>删除</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)" v-if="scope.row.id === 1" disabled>修改</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)" v-else>修改</v-btn>
         </template>
       </el-table-column>
     </el-table>
@@ -129,12 +148,19 @@
     <el-dialog
       title="分配权限"
       :visible.sync="setRightDialogVisible"
-      width="50%" @close="setRightClosed">
-      <!-- <el-tree :data="rightlist" :props="treeProps" show-checkbox
-      node-key="id" default-expand-all :default-checked-keys="defkeys" ref="treeRef">
-      </el-tree> -->
+      width="50%">
+      <el-tree 
+        :data="rightlist" 
+        :props="treeProps" 
+        show-checkbox
+        node-key="id" 
+        default-expand-all 
+        :default-checked-keys="defkeys" 
+        @close = "setRightsDialogClosed"
+        ref="treeRef">
+      </el-tree>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="setRightDialogVisible = false">取 消</el-button>
+        <el-button @click="setRightsDialogClosed">取 消</el-button>
         <el-button type="primary" @click="allotRights">确 定</el-button>
       </span>
     </el-dialog>
@@ -216,9 +242,10 @@ export default {
       rightlist:[],
       defkeys:[],
       treeProps:{
-        label:'authName',
+        label:'permissionName',
         children:'children'
       },
+      roleId:''
     }
   },
   created(){
@@ -382,14 +409,67 @@ export default {
         }
       })
     },
-    showUpdPwdDialog(row){
-
-    },
     find(){
       this.DateList();
     },
     async ShowPermissionDialog(row){
-      const {data:res} = await this.$http.get('/role/getpermissionbyroleid?id='+row.id)
+      // 在此之前获取所有权限数据
+      this.roleId = row.id
+      console.log(row);
+      const {data:res} = await this.$http.get(`/permission/get${row.rolePojo}tree`)
+      console.log(res);
+      if(res.meta.status === 200){
+        this.rightlist = res.data
+        this.getLeafKeys(row,this.defkeys)
+        this.setRightDialogVisible = true;
+        console.log(this.rightlist);
+      }
+    },
+    // 根据id删除对应的权限
+    async removeRightById(rid,pid){
+      const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err=>err)
+      if(confirmResult!=='confirm'){
+        return this.$message.info('已取消删除')
+      }
+      console.log(rid);
+      console.log(pid);
+      const{data:res}= await this.$http.delete("role/delrolepermission?roleId=" + rid + "&permissionId=" + pid );
+      console.log(res)
+      if(res.data.ststus === 200){
+        this.$message.success('已删除')
+      }
+      this.DateList()
+    },
+    // 通过递归的形式，获取角色下的所有三级权限的id，并保存到defkeys数组中
+    getLeafKeys(node,arr){
+      if(!node.children){
+        return arr.push(node.id)
+      }
+      node.children.forEach(item=>this.getLeafKeys(item,arr))
+    },
+    // 监听分配权限的对话框关闭事件
+    setRightsDialogClosed(){
+      this.setRightDialogVisible = false
+      this.defkeys = []
+    },
+    // 分配权限
+    async allotRights(){
+      const keys = [
+        // ...表示展开符号
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      console.log(keys);
+      const {data:res} = await this.$http.post(`/role/updrolerights/${this.roleId}/${keys}`)
+      if(res.meta.status === 200){
+        this.$message.success('更新权限成功')
+      }
+      this.DateList()
+      this.setRightDialogVisible=false
       console.log(res);
     }
   }
