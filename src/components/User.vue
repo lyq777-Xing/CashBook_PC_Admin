@@ -277,6 +277,7 @@ export default {
       },
       RoleDialogVisible:false,
       RoleruleForm:{},
+      header:'',
     }
   },
   created(){
@@ -332,7 +333,8 @@ export default {
       //   type: response.flag ? 'success' : 'error'
       // });
       //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
-      this.addruleForm.userHeader = response.data;
+      // this.addruleForm.userHeader = this.header
+      this.header = response.data
     },
     //上传文件之前的钩子
     beforeAvatarUpload(file) {
@@ -358,6 +360,7 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
+        this.addruleForm.userHeader = this.header
         if(this.addruleForm.userHeader ==="" || this.addruleForm.userHeader == null){
           this.addruleForm.userHeader = "efcc1544-cb75-416e-9477-ffc4900fd017.jpg";
         }
@@ -416,6 +419,7 @@ export default {
     async upd(){
       this.$refs.updruleForm.validate(async valid=>{
         if(!valid) return
+        this.updruleForm.userHeader = this.header
         const {data:res} = await this.$http.put('/user/upd',this.updruleForm);
         console.log(res); 
         if(res.meta.status === 200){

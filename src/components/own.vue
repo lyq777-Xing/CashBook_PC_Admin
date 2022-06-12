@@ -85,7 +85,7 @@ export default {
       //   type: response.flag ? 'success' : 'error'
       // });
       //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
-      this.addruleForm.mgHeader = response.data;
+      this.updruleForm.mgHeader = response.data;
       console.log(this.addruleForm.mgHeader);
     },
     //上传文件之前的钩子

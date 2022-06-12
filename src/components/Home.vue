@@ -123,6 +123,8 @@ export default {
         512:'el-icon-bell',
         513:'el-icon-s-custom',
         514:'el-icon-s-custom',
+        515:'el-icon-star-on',
+        516:'el-icon-star-off',
       },
       contextMenuVisible:false,
     }
@@ -443,6 +445,14 @@ export default {
   }
   /deep/.el-icon-s-tools:before {
     content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-star-on:before {
+      content: "\e797";
+      color: #fff;
+  }
+  /deep/.el-icon-star-off:before {
+    content: "\e717";
     color: #fff;
   }
   /deep/.el-icon-message-solid {

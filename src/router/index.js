@@ -12,6 +12,8 @@ import Permission from '../components/Permission.vue'
 import Role from '../components/Role.vue'
 import Own from '../components/own.vue'
 import Usermember from '../components/UserMember.vue'
+import Cat from '../components/cat.vue'
+// import Test from '../views/a/a.vue'
 
 Vue.use(VueRouter)
 
@@ -31,12 +33,18 @@ const routes = [{
             { path: '/role', component: Role, meta: { keepAlive: true, comp: Role, name: 'role' } },
             { path: '/own', component: Own, meta: { keepAlive: true, comp: Own, name: 'own' } },
             { path: '/usermember', component: Usermember, meta: { keepAlive: true, comp: Usermember, name: 'usermember' } },
+            { path: '/cat', component: Cat, meta: { keepAlive: true, comp: Cat, name: 'cat' } },
         ]
     },
     {
         path: '/login',
         component: Login
-    }
+    },
+    // {
+    //     path: '/test',
+    //     component: Test
+    // },
+
 ]
 
 const router = new VueRouter({

@@ -282,7 +282,8 @@ export default {
       },
       roleData:[],
       RoleDialogVisible:false,
-      RoleruleForm:{}
+      RoleruleForm:{},
+      header:''
     }
   },
   created(){
@@ -339,7 +340,8 @@ export default {
       //   type: response.flag ? 'success' : 'error'
       // });
       //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
-      this.addruleForm.mgHeader = response.data;
+      // this.addruleForm.mgHeader = response.data;
+      this.header = response.data
       console.log(this.addruleForm.mgHeader);
     },
     //上传文件之前的钩子
@@ -366,6 +368,7 @@ export default {
     async add(){
       this.$refs.addruleForm.validate(async valid=>{
         if(!valid) return
+        this.addruleForm.mgHeader = this.header
         if(this.addruleForm.mgHeader ==="" || this.addruleForm.mgHeader == null){
           this.addruleForm.mgHeader = "efcc1544-cb75-416e-9477-ffc4900fd017.jpg";
         }
@@ -425,6 +428,7 @@ export default {
     async upd(){
       this.$refs.updruleForm.validate(async valid=>{
         if(!valid) return
+         this.updruleForm.mgHeader = this.header
         const {data:res} = await this.$http.post('/manager/upd',this.updruleForm);
         console.log(res); 
         if(res.meta.status === 200){
