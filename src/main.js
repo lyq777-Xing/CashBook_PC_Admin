@@ -20,7 +20,7 @@ Vue.use(ElementUI);
 
 Vue.prototype.$http = axios
 
-axios.defaults.baseURL = 'http://172.18.113.87:8888/'
+axios.defaults.baseURL = 'http://localhost:8888/'
 
 axios.interceptors.response.use(
     response => {

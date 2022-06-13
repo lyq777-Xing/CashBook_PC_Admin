@@ -125,6 +125,8 @@ export default {
         514:'el-icon-s-custom',
         515:'el-icon-star-on',
         516:'el-icon-star-off',
+        517:'el-icon-tickets',
+        518:'el-icon-document-copy',
       },
       contextMenuVisible:false,
     }
@@ -475,7 +477,14 @@ export default {
     content: "\e7ac";
     color: #fff;
   }
-
+  /deep/.el-icon-tickets{
+    content: "\e7ac";
+    color: #fff;
+  }
+  /deep/.el-icon-document-copy{
+    content: "\e7ac";
+    color: #fff;
+  }
   .menu-tags {
     margin-left: 16px;
   
