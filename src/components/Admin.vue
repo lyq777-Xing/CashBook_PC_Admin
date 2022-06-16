@@ -45,10 +45,12 @@
         <template slot-scope="scope">
           <v-btn style="margin-right:10px;" v-if="scope.row.id != 500" @click="showRoleDialog(scope.row)">分配角色</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)" v-if="scope.row.id != 500">删除</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)" v-if="scope.row.id != 500">修改</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)" v-if="scope.row.id != 500">重置密码</v-btn>
           <v-btn style="margin-right:10px;" v-if="scope.row.id === 500" disabled @click="showRoleDialog(scope.row)">分配角色</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)" v-if="scope.row.id === 500" disabled>删除</v-btn>
-          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
-          <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)" v-if="scope.row.id === 500" disabled>修改</v-btn>
+          <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)" v-if="scope.row.id === 500" disabled>重置密码</v-btn>
         </template>
         <!-- <template slot-scope="scope" v-else>
           <v-btn style="margin-right:10px;">分配角色</v-btn>
@@ -445,8 +447,26 @@ export default {
         }
       })
     },
-    showUpdPwdDialog(row){
-
+    async showUpdPwdDialog(row){
+      console.log(row);
+      if(row.mgPhone === '' || row.mgPhone === null){
+        return this.$message.error('请先绑定手机号')
+      }
+      const confirmResult = await this.$confirm('此操作将重置该管理员密码,重置后密码将发送至绑定手机号,是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err=>err)
+      if(confirmResult !== 'confirm'){
+          return this.$message.info('已取消重置')
+      }
+      const {data:res} = await this.$http.delete("manager/updpwd?id=" + row.id)
+      if(res.meta.status === 200){
+        this.$message.success('重置密码成功')
+        this.DateList()
+      }else{
+        this.$message.error('重置密码失败')
+      }
     },
     find(){
       this.DateList();
