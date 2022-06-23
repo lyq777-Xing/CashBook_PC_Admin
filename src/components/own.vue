@@ -5,7 +5,7 @@
         <!-- <img :src="managerImg" class="headerImg" alt=""> -->
           <el-upload
               class="avatar-uploader"
-              action="http://localhost:8888/upload/upload"
+              action="http://120.48.85.254:8888/upload/upload"
               :auto-upload="autoUpload"
               name="imgFile"
               :show-file-list="false"

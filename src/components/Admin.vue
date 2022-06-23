@@ -104,7 +104,7 @@
         <el-form-item label="上传图片">
           <el-upload
             class="avatar-uploader"
-            action="http://localhost:8888/upload/upload"
+            action="http://120.48.85.254:8888/upload/upload"
             :auto-upload="autoUpload"
             name="imgFile"
             :show-file-list="false"
@@ -152,7 +152,7 @@
         <el-form-item label="上传图片">
           <el-upload
             class="avatar-uploader"
-            action="http://localhost:8888/upload/upload"
+            action="http://120.48.85.254:8888/upload/upload"
             :auto-upload="autoUpload"
             name="imgFile"
             :show-file-list="false"

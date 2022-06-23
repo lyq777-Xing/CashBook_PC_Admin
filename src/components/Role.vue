@@ -439,7 +439,7 @@ export default {
       console.log(pid);
       const{data:res}= await this.$http.delete("role/delrolepermission?roleId=" + rid + "&permissionId=" + pid );
       console.log(res)
-      if(res.data.ststus === 200){
+      if(res.meta.stsatus === 200){
         this.$message.success('已删除')
       }
       this.DateList()
@@ -467,6 +467,7 @@ export default {
       const {data:res} = await this.$http.post(`/role/updrolerights/${this.roleId}/${keys}`)
       if(res.meta.status === 200){
         this.$message.success('更新权限成功')
+        this.defkeys = []
       }
       this.DateList()
       this.setRightDialogVisible=false
