@@ -46,7 +46,7 @@
           <v-btn style="margin-right:10px;" @click="showRoleDialog(scope.row)">分配角色</v-btn>
           <v-btn style="margin-right:10px;" @click="del(scope.row)">删除</v-btn>
           <v-btn style="margin-right:10px;" @click="showUpdDialog(scope.row)">修改</v-btn>
-          <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn>
+          <!-- <v-btn style="margin-right:10px;" @click="showUpdPwdDialog(scope.row)">重置密码</v-btn> -->
         </template>
       </el-table-column>
     </el-table>
@@ -77,7 +77,7 @@
           <el-input type="password" v-model="addruleForm.checkPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="用户角色" prop="roleId">
-         <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择管理员角色" >
+         <el-select style="float:left" v-model="addruleForm.roleId" placeholder="请选择用户角色" >
             <!-- <el-option label="子管理员" value="2"></el-option> -->
             <template >
               <el-option v-for="item in roleData" :key="item.id" :label="item.roleName" :value="item.id"></el-option>

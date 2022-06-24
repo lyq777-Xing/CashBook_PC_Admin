@@ -460,7 +460,7 @@ export default {
       if(confirmResult !== 'confirm'){
           return this.$message.info('已取消重置')
       }
-      const {data:res} = await this.$http.delete("manager/updpwd?id=" + row.id)
+      const {data:res} = await this.$http.post("manager/updpwd?id=" + row.id)
       if(res.meta.status === 200){
         this.$message.success('重置密码成功')
         this.DateList()
